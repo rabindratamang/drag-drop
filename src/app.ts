@@ -245,6 +245,7 @@ interface DragTarget {
         }
     }
     
+    @autobind
     dropHandler(event: DragEvent): void {
         const prjId = event.dataTransfer!.getData('text/plain');
         projectState.moveProject(prjId, this.type === 'active' ? ProjectStatus.Active : ProjectStatus.Finished);

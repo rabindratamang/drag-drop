@@ -203,6 +203,9 @@ __decorate([
 ], ProjectList.prototype, "dragOverHandler", null);
 __decorate([
     autobind
+], ProjectList.prototype, "dropHandler", null);
+__decorate([
+    autobind
 ], ProjectList.prototype, "dragLeaveHandler", null);
 class ProjectInput extends Component {
     constructor() {

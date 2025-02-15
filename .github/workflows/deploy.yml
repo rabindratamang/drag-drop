@@ -31,7 +31,7 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: dist
+          folder: .
           clean: true  # Removes previous files in gh-pages
           target-folder: .  # Keeps files in the root of gh-pages
           exclude: "node_modules,src,.github"

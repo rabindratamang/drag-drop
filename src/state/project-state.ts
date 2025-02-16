@@ -55,4 +55,6 @@ export class ProjectState extends State<Project> {
   }
 }
 
+
+// it will run only once and return the same instance of the class, when it's imported for first time
 export const projectState = ProjectState.getInstance();

@@ -1,145 +1,9 @@
-// Drag & Drop Interfaces
-interface Draggable {
-    dragStartHandler(event: DragEvent): void;
-    dragEndHandler(event: DragEvent): void;
-}
-  
-interface DragTarget {
-    dragOverHandler(event: DragEvent): void;
-    dropHandler(event: DragEvent): void;
-    dragLeaveHandler(event: DragEvent): void;
-}
-  
-  // Project Type
-  enum ProjectStatus {
-    Active,
-    Finished
-  }
-  
-  class Project {
-    constructor(
-      public id: string,
-      public title: string,
-      public description: string,
-      public people: number,
-      public status: ProjectStatus
-    ) {}
-  }
-  
-  // Project State Management
-  type Listener<T> = (items: T[]) => void;
-  
-  class State<T> {
-    protected listeners: Listener<T>[] = [];
-  
-    addListener(listenerFn: Listener<T>) {
-      this.listeners.push(listenerFn);
-    }
-  }
-  
-  class ProjectState extends State<Project> {
-    private projects: Project[] = [];
-    private static instance: ProjectState;
-  
-    private constructor() {
-      super();
-    }
-  
-    static getInstance() {
-      if (this.instance) {
-        return this.instance;
-      }
-      this.instance = new ProjectState();
-      return this.instance;
-    }
-  
-    addProject(title: string, description: string, numOfPeople: number) {
-      const newProject = new Project(
-        Math.random().toString(),
-        title,
-        description,
-        numOfPeople,
-        ProjectStatus.Active
-      );
-      this.projects.push(newProject);
-      for (const listenerFn of this.listeners) {
-        listenerFn(this.projects.slice());
-      }
-    }
-
-    updateListeners() {
-        for (const listenerFn of this.listeners) {
-            listenerFn(this.projects.slice());
-        }
-    }
-
-    moveProject(projectId: string, newStatus: ProjectStatus) {
-        const project = this.projects.find(prj => prj.id === projectId);
-        if (project && project.status !== newStatus) {
-            project.status = newStatus;
-            this.updateListeners();
-        }
-    }
-  }
-  
-  const projectState = ProjectState.getInstance();
-  
-  // Validation
-  interface Validatable {
-    value: string | number;
-    required?: boolean;
-    minLength?: number;
-    maxLength?: number;
-    min?: number;
-    max?: number;
-  }
-  
-  function validate(validatableInput: Validatable) {
-    let isValid = true;
-    if (validatableInput.required) {
-      isValid = isValid && validatableInput.value.toString().trim().length !== 0;
-    }
-    if (
-      validatableInput.minLength != null &&
-      typeof validatableInput.value === 'string'
-    ) {
-      isValid =
-        isValid && validatableInput.value.length >= validatableInput.minLength;
-    }
-    if (
-      validatableInput.maxLength != null &&
-      typeof validatableInput.value === 'string'
-    ) {
-      isValid =
-        isValid && validatableInput.value.length <= validatableInput.maxLength;
-    }
-    if (
-      validatableInput.min != null &&
-      typeof validatableInput.value === 'number'
-    ) {
-      isValid = isValid && validatableInput.value >= validatableInput.min;
-    }
-    if (
-      validatableInput.max != null &&
-      typeof validatableInput.value === 'number'
-    ) {
-      isValid = isValid && validatableInput.value <= validatableInput.max;
-    }
-    return isValid;
-  }
-  
-  // autobind decorator
-  function autobind(_: any, _2: string, descriptor: PropertyDescriptor) {
-    const originalMethod = descriptor.value;
-    const adjDescriptor: PropertyDescriptor = {
-      configurable: true,
-      get() {
-        const boundFn = originalMethod.bind(this);
-        return boundFn;
-      }
-    };
-    return adjDescriptor;
-  }
+/// <reference path="models/drag-drop.ts"/>
+/// <reference path="models/project.ts"/> 
+/// <reference path="state/project-state.ts"/> 
+/// <reference path="utils/validation.ts"/> 
+/// <reference path="decorators/autobind.ts"/> 
+namespace App {
   
   // Component Base Class
   abstract class Component<T extends HTMLElement, U extends HTMLElement> {
@@ -368,6 +232,7 @@ interface DragTarget {
     }
   }
   
-  const prjInput = new ProjectInput();
-  const activePrjList = new ProjectList('active');
-  const finishedPrjList = new ProjectList('finished');
+  new ProjectInput();
+  new ProjectList('active');
+  new ProjectList('finished');
+}

@@ -1,5 +1,5 @@
     // ProjectList Class
-import { Component } from './base-component.js';
+import Component  from './base-component.js';
 import { ProjectItem } from './project-item.js';
 import { Project } from '../models/project.js';
 import { autobind } from '../decorators/autobind.js';
